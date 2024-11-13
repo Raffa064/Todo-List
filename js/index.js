@@ -9,6 +9,7 @@ searchBar.addEventListener("input", applySearchFilter)
 
 Sortable.create(taskList, {
   group: "task",
+  delay: 60,
   ghostClass: "ghost",
   chosenClass: "choose",
   handle: ".task-done + label",
