@@ -1,101 +1,190 @@
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-    width: 100vw;
-    height: 100vh;
+  max-width: max(600px, 60%);
+  margin-inline: auto;
+  position: relative;
+  width: 100%;
+  min-height: 100%;
+  padding: 10px;
+  background: #1d1d1d;
 }
 
-header {
-    padding: 10px;
-    background: linear-gradient(0deg, #eee, #fff);
-    border-bottom: 1px solid grey;
+body > * {
+  user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
-small {
-    color: #aaa;
-    font-size: 1rem;
-    animation: disapear 4s forwards;
+#search-bar {
+  width: 100%;
+  height: 44px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  background: #252525;
+  color: #ddd;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px #0004, inset 0px 0px 5px #4442;
 }
 
-@keyframes disapear {
-    0% {
-        opacity: 100%;
-    }
-    100% {
-        opacity: 0%;
-    }
+#task-list {
+  padding-bottom: 100px;
+  list-style: none;
 }
 
-main {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    background: #eee;
+.task-item {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #252525;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px #0004, inset 0px 0px 5px #4442;
+  overflow: hidden;
 }
 
-ul {
-    list-style: none;
+.task-item::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 10px;
+  height: 100%;
+  background: #777;
 }
 
-li {
-    padding: 10px;
-    margin-bottom: 5px;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+.task-item:focus-within {
+  outline: 2px solid #A7C7E7;
 }
 
-.label {
-    margin-left: 10px;
-    text-decoration: none;
+.task-item:focus-within::after {
+  background: #A7C7E7;
 }
 
-input:checked + .label {
-    color: #aaa;
-    text-decoration: line-through;
-    font-style: italic;
+.task-item.ghost {
+  opacity: .4;
 }
 
-.label {
-    display: inline;
-    padding: 4px;
-    outline: none;
+.task-item.choose:not(.ghost) {
+  width: 40% !important;
+
+  & .task-label {
+    max-width: calc(100% - 44px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
-.label:focus {
-    border: 1px solid grey;
-    border-radius: 3px;
+.task-item.hidden {
+  display: none;
 }
 
-.label br {
-    display: none;
+.task-label {
+  flex: 1;
+  margin-left: 10px;
+  text-decoration: none;
 }
 
-.placeholder {
-    color: #aaa;
-    font-style: italic;
+.task-done {
+  display: none;
+}
+
+.task-done+label {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+}
+
+.task-done:checked+label {
+  border-color: #999;
+}
+
+.task-done:checked+label::before {
+  content: '';
+  width: 60%;
+  height: 60%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #999;
+  border-radius: 50%;
+}
+
+.task-done:checked+label+.task-label {
+  color: #777;
+  text-decoration: line-through;
+  font-style: italic;
+}
+
+.task-label {
+  color: #ddd;
+  display: block;
+  padding: 4px;
+  outline: none;
+}
+
+.task-label br {
+  display: none;
+}
+
+#trash {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 100vh;
+  transform: translateX(-50%);
+  background: #d55;
+  animation: fade-in .4s cubic-bezier(0.47, 0, 0.745, 0.715);
+}
+
+#trash:not(.visible) {
+  display: none;
+}
+
+#trash>* {
+  display: none;
 }
 
 .float-action-button {
-    width: 3rem;
-    height: 3rem;
-    position: fixed;
-    right: 10px;
-    bottom: 10px;
-    background: #ddd;
-    color: gray;
-    border: 1px solid gray;
-    border-radius: 50%;
-    box-shadow: 1px 1px 3px #0004;
-    transition: 0.2s;
+  width: 3rem;
+  height: 3rem;
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  background: #ddd;
+  color: #333;
+  font-size: 2rem;
+  border-radius: 50%;
+  box-shadow: 1px 1px 3px #0004;
 }
 
 .float-action-button:active {
-    background: #C6C6C6;
-    font-size: 1.2rem;
+  background: #777;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }

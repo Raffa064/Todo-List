@@ -2,22 +2,21 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/index.css">
-    <title>Todo List</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/index.css">
+  <title>Todo List</title>
 </head>
 
 <body>
-    <header>
-        <h1>Todo list <small>Easy and simple todo list</small></h1>
-    </header>
-    <main>
-        <ul></ul>
-        <button class="float-action-button" type="submit">+</button>
-    </main>
-    
-    <script src="js/index.js"></script>
+  <input id="search-bar" placeholder="Search..."/>
+  <div id="trash"></div>
+  <ul id="task-list"></ul>
+
+  <button class="float-action-button" type="submit">+</button>
+
+  <script src="dist/Sortable.min.js"></script>
+  <script src="js/index.js"></script>
 </body>
 
 </html>

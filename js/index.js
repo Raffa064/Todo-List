@@ -1,94 +1,142 @@
-function createTask(container, id, disablePlaceHolder) {
-    const html = '<input type="checkbox"> <span class="label" contenteditable="true">'+(disablePlaceHolder ? '' : '<span class="placeholder">Type the task title here</span>')+'</span>'
-    const li = document.createElement('li')
-    li.id = id
-    li.innerHTML = html
-    container.prepend(li)
+const data = load()
 
-    const data = {
-        li: li,
-        checkbox: document.querySelector(`#${id} > input`),
-        label: document.querySelector(`#${id} > span`)
-    }
+const searchBar = document.querySelector("#search-bar")
+const taskList = document.querySelector('#task-list')
+const trash = document.querySelector("#trash")
+const addTaskButton = document.querySelector('.float-action-button')
+
+searchBar.addEventListener("input", applySearchFilter)
+
+Sortable.create(taskList, {
+  group: "task",
+  ghostClass: "ghost",
+  chosenClass: "choose",
+  handle: ".task-done + label",
+  onStart: () => {
+    trash.classList.add("visible")
+  },
+  onEnd: ({ oldIndex, newIndex, to}) => {
+    const length = data.tasks.length - 1
+    oldIndex = length - oldIndex;
+    newIndex = length - newIndex;
+
+    const [task] = data.tasks.splice(oldIndex, 1)
     
-    const update = () => {
-        save()
-    }
-    data.checkbox.onchange = update
-
-    data.label.onkeydown = (event) => {
-        const placeholder = document.querySelector(`#${id} .placeholder`)
-        if (placeholder) {
-            data.label.removeChild(placeholder)
-        }
-        data.label.onkeydown = null
-    } 
-
-    data.label.addEventListener('focusout', () => {
-        if (data.label.innerText.trim().length === 0) {
-            container.removeChild(li)
-        }
-        update()
-    })
+    if (to != trash)
+      data.tasks.splice(newIndex, 0, task)
 
     save()
-    return data
+
+    trash.classList.remove("visible")
+  }
+})
+
+Sortable.create(trash, {
+  group: "task",
+  onAdd: () => {
+    trash.innerHTML = ""
+  }
+})
+
+addTaskButton.addEventListener("click", addTask)
+
+renderTasks()
+
+function applySearchFilter() {
+  taskList.querySelectorAll(".task-item").forEach(item => {
+    const content = item.innerText.toLowerCase()
+    const query = searchBar.value.toLowerCase()
+    
+    if (content.indexOf(query) >= 0)
+      item.classList.remove("hidden")
+    else
+      item.classList.add("hidden")
+  })
 }
 
-var taskid = 0
-var newTaskId = () => ('task_' + taskid++)
-const taskList = document.querySelector('ul')
-const addTaskButton = document.querySelector('.float-action-button')
-addTaskButton.onclick = addTask
+function renderTasks() {
+  taskList.innerHTML = ""
+  data.tasks.forEach(task => {
+    const { taskItem } = createTask(task)
+    taskList.insertBefore(taskItem, taskList.firstChild)
+  })
+}
 
-load()
+function createTask(state) {
+  state.id = state.id || data.globalId++
+  state.label = state.label || ""
+
+  const taskItem = document.createElement('li')
+  taskItem.className = "task-item"
+  taskItem.id = state.id
+
+  const taskDone = document.createElement("input")
+  taskDone.id = `task_done_${state.id}`
+  taskDone.className = "task-done"
+  taskDone.type = "checkbox"
+  taskDone.checked = state.checked
+  taskItem.appendChild(taskDone)
+
+  const doneLabel = document.createElement("label")
+  doneLabel.htmlFor = taskDone.id
+  taskItem.appendChild(doneLabel)
+
+  const taskLabel = document.createElement("span")
+  taskLabel.className = "task-label"
+  taskLabel.contentEditable = true
+  taskLabel.innerText = state.label
+  taskItem.appendChild(taskLabel)
+
+  const saveState = () => {
+    state.checked = taskDone.checked
+    state.label = taskLabel.textContent
+    console.log(state)
+    save()
+  }
+
+  taskDone.addEventListener("change", saveState)
+  taskLabel.addEventListener("input", saveState)
+  taskLabel.addEventListener('focusout', () => {
+    taskLabel.blur()
+    if (!taskLabel.innerText.trim()) { // Remove if empty
+      taskItem.remove()
+
+      const index = data.tasks.indexOf(state)
+      data.tasks.splice(index, 1)
+
+      save()
+      return
+    }
+
+    saveState()
+  })
+
+  return { state, taskItem, taskDone, taskLabel }
+}
 
 function addTask() {
-    createTask(taskList, newTaskId())
+  const { state, taskItem, taskLabel } = createTask({})
+
+  data.tasks.push(state)
+
+  taskList.insertBefore(taskItem, taskList.firstChild)
+  taskLabel.focus()
 }
 
 function load() {
-    if (window.localStorage) {
-        if (window.localStorage.taskid) {
-            taskid = parseInt(window.localStorage.taskid)
-        }
+  const jsonData = localStorage.getItem("data")
 
-        if (window.localStorage.tasks) {
-            const tasks = JSON.parse(window.localStorage.tasks)
-            var tasksAsArray = []
-            for (const index in tasks) {
-                const task = tasks[index]
-                tasksAsArray.push({
-                    id: index,
-                    checked: task.checked,
-                    label: task.label
-                })
-            }
-            tasksAsArray = tasksAsArray.sort((a, b) => {
-                return b.id > a.id ? -1 : 1
-            })
+  if (jsonData) {
+    return JSON.parse(jsonData)
+  }
 
-            for (let i = 0; i < tasksAsArray.length; i++) {
-                const task = tasksAsArray[i]
-                const data = createTask(taskList, task.id, true)
-                data.checkbox.checked = task.checked
-                data.label.innerText = task.label
-            }
-        }
-    }
+  return {
+    globalId: 1,
+    tasks: []
+  }
 }
 
 function save() {
-    const tasks = {}
-    taskList.childNodes.forEach((taskNode) => {
-        const checked = document.querySelector('#' + taskNode.id + ' input').checked
-        const label = document.querySelector('#' + taskNode.id + ' .label').innerText
-        tasks[taskNode.id] = {
-            checked: checked,
-            label: label
-        }
-    })
-
-    window.localStorage.taskid = taskid.toString()
-    window.localStorage.tasks = JSON.stringify(tasks)
+  const jsonData = JSON.stringify(data)
+  localStorage.setItem("data", jsonData)
 }
