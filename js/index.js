@@ -41,6 +41,13 @@ Sortable.create(trash, {
 
 addTaskButton.addEventListener("click", addTask)
 
+addEventListener("keydown", (evt) => {
+  if (evt.key == "r" && evt.ctrlKey) {
+    if (app) 
+      app?.forceUpdate()
+  }
+})
+
 renderTasks()
 
 function applySearchFilter() {
