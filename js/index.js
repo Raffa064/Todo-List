@@ -42,9 +42,16 @@ Sortable.create(trash, {
 addTaskButton.addEventListener("click", addTask)
 
 addEventListener("keydown", (evt) => {
-  if (evt.key == "r" && evt.ctrlKey) {
-    if (app) 
-      app?.forceUpdate()
+  if (evt.ctrlKey) {
+    switch(evt.key) { 
+      case "r":
+        if (app) app?.forceUpdate()
+        break
+    case "Tab": addTask()
+      break;
+    default:
+        return
+    }
   }
 })
 
