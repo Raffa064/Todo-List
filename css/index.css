@@ -56,7 +56,7 @@ body>* {
   border-radius: 8px;
   box-shadow: 2px 2px 5px #0004, inset 0px 0px 5px #4442;
   overflow: hidden;
-  transition: .2s;
+  transition: color .2s, border-color .2s;
 }
 
 .task-item::after {
