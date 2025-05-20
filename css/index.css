@@ -178,6 +178,7 @@ body>* {
 }
 
 .float-action-button {
+  z-index: 5;
   width: 3rem;
   height: 3rem;
   position: fixed;
@@ -204,11 +205,9 @@ body>* {
   bottom: 10px;
   border: 1px solid #222;
   border-radius: 50%;
-  --dis: 3.5rem;
   --angle: var(--idx);
-  transform:
-    translateY(-1.5rem) translate(-50%, 50%) rotate(calc(var(--angle) * -1deg)) translateX(var(--dis));
-  animation: fade-in .2s forwards;
+  --time: calc((var(--idx) + 1) / 6 * .05);
+  animation: fade-in .2s forwards, translate-x calc(var(--time) * .2s) forwards;
 }
 
 *[data-color="gray"] {
@@ -231,6 +230,15 @@ body>* {
   color: #f56 !important;
 }
 
+@keyframes translate-x {
+  0% {
+    transform: translateY(-1.5rem) translate(-50%, 50%) rotate(0deg) translateX(0);
+  }
+
+  100% {
+    transform: translateY(-1.5rem) translate(-50%, 50%) rotate(calc(var(--angle) * -1deg)) translateX(3rem);
+  }
+}
 
 @keyframes fade-in {
   0% {
