@@ -56,6 +56,7 @@ body>* {
   border-radius: 8px;
   box-shadow: 2px 2px 5px #0004, inset 0px 0px 5px #4442;
   overflow: hidden;
+  transition: .2s;
 }
 
 .task-item::after {
@@ -66,10 +67,15 @@ body>* {
   width: 10px;
   height: 100%;
   background: currentColor;
+  transition: .2s;
+}
+
+.task-item:focus-within::after {
+  width: 15px;
 }
 
 .task-item:focus-within {
-  outline: 2px solid #A7C7E7;
+  outline: 2px solid currentColor;
   animation: active-border .2s cubic-bezier(1, 0, 0, 1);
 }
 
@@ -81,10 +87,6 @@ body>* {
   100% {
     outline-width: 2px;
   }
-}
-
-.task-item:focus-within::after {
-  background: #A7C7E7;
 }
 
 .task-item.ghost {
@@ -121,11 +123,11 @@ body>* {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid #ddd;
+  border: 2px solid currentColor;
 }
 
 .task-done:checked+label {
-  border-color: #999;
+  opacity: .2;
 }
 
 .task-done:checked+label::before {
@@ -136,7 +138,7 @@ body>* {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background: #999;
+  background: currentColor;
   border-radius: 50%;
   animation: fade-in .5s forwards;
 }
