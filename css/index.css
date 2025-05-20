@@ -7,6 +7,10 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.hidden {
+  display: none;
+}
+
 body {
   max-width: max(600px, 60%);
   margin-inline: auto;
@@ -17,7 +21,7 @@ body {
   background: #1d1d1d;
 }
 
-body > * {
+body>* {
   user-select: none;
   -ms-user-select: none;
   -moz-user-select: none;
@@ -61,7 +65,7 @@ body > * {
   top: 0;
   width: 10px;
   height: 100%;
-  background: #777;
+  background: currentColor;
 }
 
 .task-item:focus-within {
@@ -190,6 +194,43 @@ body > * {
 .float-action-button:active {
   background: #777;
 }
+
+.color-pick {
+  width: 30px;
+  height: 30px;
+  background: currentColor;
+  position: fixed;
+  left: 50%;
+  bottom: 10px;
+  border: 1px solid #222;
+  border-radius: 50%;
+  --dis: 3.5rem;
+  --angle: var(--idx);
+  transform:
+    translateY(-1.5rem) translate(-50%, 50%) rotate(calc(var(--angle) * -1deg)) translateX(var(--dis));
+  animation: fade-in .2s forwards;
+}
+
+*[data-color="gray"] {
+  color: #777 !important;
+}
+
+*[data-color="blue"] {
+  color: #08f !important;
+}
+
+*[data-color="green"] {
+  color: #0d8 !important;
+}
+
+*[data-color="orange"] {
+  color: #fa0 !important;
+}
+
+*[data-color="red"] {
+  color: #f56 !important;
+}
+
 
 @keyframes fade-in {
   0% {

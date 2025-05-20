@@ -9,11 +9,19 @@
 </head>
 
 <body>
-  <input id="search-bar" placeholder="Search..."/>
+  <input id="search-bar" placeholder="Search..." />
   <div id="trash"></div>
   <ul id="task-list"></ul>
 
   <button class="float-action-button" type="submit">+</button>
+
+  <div id="c-pick-container" class="hidden">
+    <button class="color-pick" data-color="gray" style="--idx: 180;"></button>
+    <button class="color-pick" data-color="blue" style="--idx: 135;"></button>
+    <button class="color-pick" data-color="green" style="--idx: 90;"></button>
+    <button class="color-pick" data-color="orange" style="--idx: 45;"></button>
+    <button class="color-pick" data-color="red" style="--idx: 0;"></button>
+  </div>
 
   <script src="dist/Sortable.min.js"></script>
   <script src="js/index.js"></script>
